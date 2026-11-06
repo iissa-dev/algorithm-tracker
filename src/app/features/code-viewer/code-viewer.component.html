@@ -1,0 +1,116 @@
+<div class="bg-[#0e111a] border border-[#23283c] rounded-2xl overflow-hidden shadow-xl flex flex-col h-full">
+
+  <!-- Header with Language Selector Tabs & Copy -->
+  <div class="flex items-center justify-between border-b border-[#23283c] px-3 py-2 bg-[#06070b]/60 gap-2">
+    <div class="flex items-center gap-1.5">
+      <span class="text-xs">💻</span>
+      <span class="text-[11px] sm:text-xs font-bold text-[#c9d2dc] uppercase tracking-wider font-mono">
+        Code
+      </span>
+    </div>
+
+    <!-- Language Tabs -->
+    <div class="flex items-center gap-1.5">
+      <div class="flex items-center bg-[#06070b] p-0.5 rounded-lg border border-[#23283c]">
+        <button
+          (click)="setLanguage('pseudocode')"
+          [class.bg-[var(--color-blue)]]="selectedLanguage() === 'pseudocode'"
+          [class.text-white]="selectedLanguage() === 'pseudocode'"
+          [class.shadow-sm]="selectedLanguage() === 'pseudocode'"
+          [class.text-[#828c9b]]="selectedLanguage() !== 'pseudocode'"
+          class="px-2 py-0.5 text-[10px] sm:text-xs font-mono font-semibold rounded-md transition-all"
+        >
+          Pseudo
+        </button>
+
+        <button
+          (click)="setLanguage('csharp')"
+          [class.bg-[var(--color-blue)]]="selectedLanguage() === 'csharp'"
+          [class.text-white]="selectedLanguage() === 'csharp'"
+          [class.shadow-sm]="selectedLanguage() === 'csharp'"
+          [class.text-[#828c9b]]="selectedLanguage() !== 'csharp'"
+          class="px-2 py-0.5 text-[10px] sm:text-xs font-mono font-semibold rounded-md transition-all"
+        >
+          C#
+        </button>
+
+        <button
+          (click)="setLanguage('cpp')"
+          [class.bg-[var(--color-blue)]]="selectedLanguage() === 'cpp'"
+          [class.text-white]="selectedLanguage() === 'cpp'"
+          [class.shadow-sm]="selectedLanguage() === 'cpp'"
+          [class.text-[#828c9b]]="selectedLanguage() !== 'cpp'"
+          class="px-2 py-0.5 text-[10px] sm:text-xs font-mono font-semibold rounded-md transition-all"
+        >
+          C++
+        </button>
+      </div>
+
+      <!-- Copy Button -->
+      <button
+        (click)="copyCode()"
+        class="p-1 rounded-md bg-[#06070b] hover:bg-[#141724] border border-[#23283c] text-[#828c9b] hover:text-[#c9d2dc] text-[10px] transition"
+        title="نسخ الكود"
+      >
+        @if (copied()) {
+          <span class="text-emerald-400 px-1 font-arabic">✓</span>
+        } @else {
+          <span>📋</span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Synchronized Code Area with Active Line Highlighter -->
+  <div class="p-2.5 sm:p-3 overflow-y-auto overflow-x-auto font-mono text-[11px] sm:text-xs text-[#c9d2dc] space-y-0.5 flex-1 max-h-[220px] sm:max-h-[320px] lg:max-h-[560px] bg-[#06070b]/40">
+    @for (line of codeLines(); track $index) {
+      @let lineNum = $index + 1;
+      @let isActive = lineNum === activeLine();
+
+      <div
+        [class.bg-[var(--color-blue)]/20]="isActive"
+        [class.border-r-2]="isActive"
+        [class.border-[var(--color-blue)]]="isActive"
+        [class.text-white]="isActive"
+        [class.font-semibold]="isActive"
+        [class.shadow-inner]="isActive"
+        [class.hover:bg-[#141724]/40]="!isActive"
+        class="flex items-center gap-2 px-1.5 py-0.5 rounded transition-all duration-200 select-none group"
+      >
+        <span
+          [class.text-[var(--color-blue)]]="isActive"
+          [class.font-bold]="isActive"
+          [class.text-[#828c9b]/60]="!isActive"
+          class="w-5 text-right select-none text-[10px] shrink-0"
+        >
+          {{ lineNum }}
+        </span>
+
+        <span class="whitespace-pre flex-1 font-mono tracking-tight">{{ line }}</span>
+
+        @if (isActive) {
+          <span class="text-[9px] uppercase font-bold text-[var(--color-blue)] bg-[var(--color-blue)]/20 px-1.5 py-0.2 rounded border border-[var(--color-blue)]/30 shrink-0 font-sans hidden sm:inline">
+            نشط
+          </span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Algorithm Complexity Footer -->
+  <div class="border-t border-[#23283c] p-2 sm:p-2.5 bg-[#06070b]/80 flex flex-wrap items-center justify-between gap-1.5 text-[10px] sm:text-[11px]" dir="ltr">
+    <div class="flex items-center gap-1.5">
+      <span class="text-[#828c9b]">Worst:</span>
+      <span class="font-mono font-bold text-rose-400">{{ currentAlgorithm().metadata.timeComplexity.worst }}</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <span class="text-[#828c9b]">Average:</span>
+      <span class="font-mono font-bold text-[var(--color-beige)]">{{ currentAlgorithm().metadata.timeComplexity.average }}</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <span class="text-[#828c9b]">Space:</span>
+      <span class="font-mono font-bold text-[var(--color-green)]">{{ currentAlgorithm().metadata.spaceComplexity }}</span>
+    </div>
+  </div>
+
+</div>

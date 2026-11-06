@@ -1,0 +1,62 @@
+<div class="space-y-5">
+  <!-- Algorithm Cards Grid: Exactly the 3 algorithms from Chapters 2 & 3 -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+    @for (algo of catalog(); track algo.id) {
+    <div (click)="onSelectAlgorithm(algo)"
+      class="bg-charcoal-850 border border-charcoal-border hover:border-(--color-blue)/60 rounded-2xl p-5 transition-all duration-300 flex flex-col justify-between group cursor-pointer hover:shadow-xl hover:shadow-(--color-blue)/10 relative overflow-hidden">
+      <div>
+        <!-- Chapter Number & Category Header -->
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <span
+            class="px-2.5 py-1 rounded-lg bg-(--color-blue)/15 text-(--color-blue) border border-(--color-blue)/30 text-xs font-mono font-bold">
+            Chapter {{ algo.chapterNumber }}
+          </span>
+
+          <span
+            class="px-2.5 py-0.5 rounded-md bg-charcoal-950 text-[10px] text-[#828c9b] font-mono border border-charcoal-border">
+            {{ algo.categoryAr }}
+          </span>
+        </div>
+
+        <!-- Title & Subtitle -->
+        <div class="space-y-1 mb-3">
+          <h3
+            class="text-lg font-bold text-white group-hover:text-(--color-blue) transition-colors flex items-center justify-between">
+            <span>{{ algo.nameEn }}</span>
+            <span class="text-sm font-arabic font-semibold text-[#828c9b]">{{ algo.nameAr }}</span>
+          </h3>
+          <span class="text-[11px] font-mono text-(--color-blue) block">{{ algo.chapterTitle }}</span>
+          <p class="text-xs text-[#828c9b] font-arabic leading-relaxed line-clamp-2 mt-1">
+            {{ algo.descriptionAr }}
+          </p>
+        </div>
+
+        <!-- Complexity Badges -->
+        <div
+          class="grid grid-cols-3 gap-1.5 my-3.5 pt-3 border-t border-charcoal-border/60 text-center font-mono text-xs">
+          <div class="p-2 rounded-xl bg-charcoal-950 border border-charcoal-border">
+            <span class="text-[10px] text-[#828c9b] block font-sans">Best</span>
+            <span class="font-bold text-green text-[11px]">{{ algo.timeComplexity.best }}</span>
+          </div>
+          <div class="p-2 rounded-xl bg-charcoal-950 border border-charcoal-border">
+            <span class="text-[10px] text-[#828c9b] block font-sans">Average</span>
+            <span class="font-bold text-beige text-[11px]">{{ algo.timeComplexity.average }}</span>
+          </div>
+          <div class="p-2 rounded-xl bg-charcoal-950 border border-charcoal-border">
+            <span class="text-[10px] text-[#828c9b] block font-sans">Worst</span>
+            <span class="font-bold text-rose-400 text-[11px]">{{ algo.timeComplexity.worst }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Visualizer Button -->
+      <button (click)="onSelectAlgorithm(algo)"
+        class="w-full py-2.5 rounded-xl bg-(--color-blue) hover:brightness-110 text-white text-xs font-bold transition shadow-md shadow-(--color-blue)/20 flex items-center justify-center gap-2 group-hover:scale-[1.01] active:scale-95 font-arabic mt-1">
+        <span>فتح المحاكي المرئي</span>
+        <span>➔</span>
+      </button>
+    </div>
+    }
+  </div>
+
+</div>

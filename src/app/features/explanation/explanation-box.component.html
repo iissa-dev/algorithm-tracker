@@ -1,0 +1,29 @@
+<div class="bg-[#0e111a] border border-[var(--color-blue)]/30 rounded-2xl p-4 shadow-xl relative" dir="rtl">
+  
+  <!-- Header: Phase Badge & Step Counter -->
+  <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-[#23283c]">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[var(--color-blue)]"></span>
+      <span
+        [class]="phaseBadgeClass()"
+        class="text-xs font-bold px-3 py-1 rounded-full border font-arabic transition-all duration-200"
+      >
+        {{ currentStep()?.phaseNameAr || 'الخطوة' }}
+      </span>
+    </div>
+
+    <!-- Step number badge -->
+    <div class="flex items-center gap-1.5 text-xs text-[#828c9b]">
+      <span class="font-arabic font-medium">الخطوة</span>
+      <span dir="ltr" class="px-2 py-0.5 rounded bg-[#06070b] text-[var(--color-blue)] border border-[#23283c] font-bold font-mono">
+        {{ (currentStep()?.stepIndex ?? 0) + 1 }} / {{ currentStep()?.totalSteps || 1 }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Clear, Crisp Explanation Text -->
+  <p class="text-sm sm:text-base text-[#c9d2dc] font-arabic leading-relaxed font-medium">
+    {{ currentStep()?.descriptionAr || 'ابدأ الخطوات لمتابعة الشرح.' }}
+  </p>
+
+</div>

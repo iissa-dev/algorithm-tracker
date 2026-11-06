@@ -1,3 +1,103 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+:root {
+  /* ======================================================== */
+  /* COLOR PALETTE - EDIT HERE TO CHANGE APP COLORS GLOBALLY */
+  /* ======================================================== */
+  --color-blue: #4771b4;
+  --color-beige: #b59678;
+  --color-green: #a0bd26;
+
+  /* Semantic Theme Variables */
+  --color-primary: var(--color-blue);
+  --color-secondary: var(--color-beige);
+  --color-accent: var(--color-green);
+
+  /* Neutrals & Dark Surfaces */
+  --color-bg-main: #06070b;
+  --color-bg-surface: #0e111a;
+  --color-bg-card: #06070b;
+  --color-border: #23283c;
+  --color-text-main: #c9d2dc;
+  --color-text-muted: #828c9b;
+}
+
+@theme {
+  --color-blue: var(--color-blue);
+  --color-beige: var(--color-beige);
+  --color-green: var(--color-green);
+
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+
+  --color-charcoal-950: #06070b;
+  --color-charcoal-900: #0a0c13;
+  --color-charcoal-850: #0e111a;
+  --color-charcoal-800: #141724;
+  --color-charcoal-700: #1d2235;
+  --color-charcoal-border: #23283c;
+
+  --color-silver-100: #f1f4f8;
+  --color-silver-200: #e2e7ee;
+  --color-silver-300: #c9d2dc;
+  --color-silver-400: #a2adb9;
+  --color-silver-500: #7b8696;
+
+  /* Alias legacy violet utilities directly to --color-blue variable */
+  --color-violet-400: var(--color-blue);
+  --color-violet-500: var(--color-blue);
+  --color-violet-600: var(--color-blue);
+  --color-violet-700: var(--color-blue);
+
+  --font-arabic: 'Cairo', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Theme Utility Classes linked directly to CSS Variables */
+.bg-app-blue { background-color: var(--color-blue); }
+.text-app-blue { color: var(--color-blue); }
+.border-app-blue { border-color: var(--color-blue); }
+
+.bg-app-beige { background-color: var(--color-beige); }
+.text-app-beige { color: var(--color-beige); }
+.border-app-beige { border-color: var(--color-beige); }
+
+.bg-app-green { background-color: var(--color-green); }
+.text-app-green { color: var(--color-green); }
+.border-app-green { border-color: var(--color-green); }
+
+body {
+  font-family: var(--font-sans);
+  background-color: #06070b;
+  color: #c9d2dc;
+  overflow-x: hidden;
+}
+
+.font-arabic {
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0c13;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #23283c;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-blue);
+}

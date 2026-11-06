@@ -1,0 +1,180 @@
+<div class="bg-[#0e111a] border border-[#23283c] rounded-2xl p-4 shadow-xl">
+  <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-[#23283c]/60">
+    <div class="flex items-center gap-2">
+      <span class="text-sm">📊</span>
+      <h4 class="text-xs font-bold text-[#c9d2dc] uppercase tracking-wider font-mono">Variables HUD</h4>
+    </div>
+    <span class="text-[10px] text-[var(--color-blue)] font-mono">{{ currentAlgorithm().metadata.chapterTitle }}</span>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+    
+    <!-- IF SEARCH ALGORITHM (Sequential Search from Chapter 3) -->
+    @if (isSearch()) {
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">مؤشر <bdi class="font-mono text-[var(--color-blue)]">i</bdi></span>
+          <span class="font-mono text-[var(--color-blue)] text-[10px]" dir="ltr">Index</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-blue)]">
+            {{ variables()?.i !== null && variables()?.i !== undefined ? variables()?.i : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">الهدف <bdi class="font-mono text-[var(--color-green)]">x</bdi></span>
+          <span class="font-mono text-[var(--color-green)] text-[10px]" dir="ltr">Target</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-green)]">
+            {{ variables()?.target ?? engine.searchTarget() }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold"><bdi class="font-mono text-[var(--color-beige)]">A[i]</bdi></span>
+          <span class="font-mono text-[var(--color-beige)] text-[10px]" dir="ltr">Current</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-beige)]">
+            {{ variables()?.i !== null && variables()?.i !== undefined && variables()!.i! < currentStep()!.array.length ? currentStep()!.array[variables()!.i!] : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">فحص الشرط</span>
+          <span class="font-mono text-[10px] font-bold" dir="ltr">
+            @if (currentStep()?.actionType === 'found') {
+              <span class="text-[var(--color-green)]">FOUND</span>
+            } @else if (currentStep()?.actionType === 'not-found') {
+              <span class="text-rose-400">NOT FOUND</span>
+            } @else {
+              <span class="text-[#828c9b]">SEARCHING</span>
+            }
+          </span>
+        </div>
+        <div class="my-0.5 flex items-center justify-center min-h-[30px]">
+          <span class="text-xs font-bold text-[#c9d2dc] font-mono line-clamp-1">
+            {{ variables()?.conditionDescription || '—' }}
+          </span>
+        </div>
+      </div>
+
+    <!-- ELSE IF MERGE SORT (Chapter 2) -->
+    } @else if (isMergeSort()) {
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">left</span>
+          <span class="font-mono text-[var(--color-blue)] text-[10px]" dir="ltr">Start</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-blue)]">
+            {{ variables()?.left !== null && variables()?.left !== undefined ? variables()?.left : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">mid</span>
+          <span class="font-mono text-[var(--color-blue)] text-[10px]" dir="ltr">Middle</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-blue)]">
+            {{ variables()?.mid !== null && variables()?.mid !== undefined ? variables()?.mid : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">right</span>
+          <span class="font-mono text-[var(--color-beige)] text-[10px]" dir="ltr">End</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-beige)]">
+            {{ variables()?.right !== null && variables()?.right !== undefined ? variables()?.right : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">الحالة</span>
+          <span class="font-mono text-[10px] text-[var(--color-blue)]" dir="ltr">STATUS</span>
+        </div>
+        <div class="my-0.5 flex items-center justify-center min-h-[30px]">
+          <span class="text-xs font-bold text-[#c9d2dc] font-mono line-clamp-1">
+            {{ variables()?.conditionDescription || '—' }}
+          </span>
+        </div>
+      </div>
+
+    <!-- ELSE INSERTION SORT (Chapter 2) -->
+    } @else {
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">مؤشر <bdi class="font-mono text-[var(--color-blue)]">i</bdi></span>
+          <span class="font-mono text-[var(--color-blue)] text-[10px]" dir="ltr">Outer</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-blue)]">
+            {{ variables()?.i !== null && variables()?.i !== undefined ? variables()?.i : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">مؤشر <bdi class="font-mono text-[var(--color-beige)]">j</bdi></span>
+          <span class="font-mono text-[var(--color-beige)] text-[10px]" dir="ltr">Inner</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-beige)]">
+            {{ variables()?.j !== null && variables()?.j !== undefined ? variables()?.j : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">المفتاح</span>
+          <span class="font-mono text-[var(--color-beige)] text-[10px]" dir="ltr">Key</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-beige)]">
+            {{ variables()?.key !== null && variables()?.key !== undefined ? variables()?.key : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">الشرط</span>
+          <span class="font-mono text-[10px] font-bold" dir="ltr">
+            @if (variables()?.isConditionTrue === true) {
+              <span class="text-[var(--color-green)]">TRUE</span>
+            } @else if (variables()?.isConditionTrue === false) {
+              <span class="text-rose-400">FALSE</span>
+            } @else {
+              <span class="text-[#828c9b]">--</span>
+            }
+          </span>
+        </div>
+        <div class="my-0.5 flex items-center justify-center min-h-[30px]">
+          <span class="text-xs font-bold text-[#c9d2dc] font-mono line-clamp-1">
+            {{ variables()?.conditionDescription || '—' }}
+          </span>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

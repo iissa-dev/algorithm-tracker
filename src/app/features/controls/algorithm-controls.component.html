@@ -1,0 +1,205 @@
+<div class="bg-[#0e111a] border border-[#23283c] rounded-2xl p-3.5 sm:p-4 shadow-xl space-y-3">
+
+  <!-- Progress Bar & Scrubber -->
+  <div class="space-y-1">
+    <div class="flex items-center justify-between text-xs text-[#828c9b]">
+      <span class="font-arabic font-medium text-[#c9d2dc]">
+        مؤشر التقدم
+      </span>
+      <span dir="ltr" class="text-[var(--color-blue)] font-bold font-mono text-xs">
+        {{ progressPct() }}% ({{ (currentStepIndex()) + 1 }} / {{ totalSteps() }})
+      </span>
+    </div>
+
+    <!-- Range slider -->
+    <div class="relative flex items-center">
+      <input
+        type="range"
+        [min]="0"
+        [max]="totalSteps() - 1"
+        [value]="currentStepIndex()"
+        (input)="onProgressScrub($event)"
+        class="w-full h-2 bg-[#06070b] rounded-lg appearance-none cursor-pointer accent-[var(--color-blue)] border border-[#23283c] focus:outline-none focus:ring-2 focus:ring-[var(--color-blue)]/40"
+      />
+    </div>
+  </div>
+
+  <!-- Primary Playback Action Toolbar -->
+  <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+    
+    <!-- Group 1: Navigation & Playback Controls -->
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <!-- Previous Step Button -->
+      <button
+        (click)="prev()"
+        [disabled]="currentStepIndex() === 0"
+        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#06070b] hover:bg-[#141724] disabled:opacity-30 disabled:cursor-not-allowed text-[#c9d2dc] text-xs font-semibold transition-all border border-[#23283c] active:scale-95 flex items-center gap-1 font-arabic"
+        title="الخطوة السابقة"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+        <span class="hidden sm:inline">السابق</span>
+      </button>
+
+      <!-- Play / Pause Button -->
+      <button
+        (click)="togglePlay()"
+        [class.bg-[var(--color-blue)]]="!isPlaying()"
+        [class.hover:brightness-110]="!isPlaying()"
+        [class.shadow-[var(--color-blue)]/30]="!isPlaying()"
+        [class.bg-[var(--color-beige)]]="isPlaying()"
+        [class.hover:bg-[var(--color-beige)]/90]="isPlaying()"
+        [class.shadow-[var(--color-beige)]/30]="isPlaying()"
+        class="px-4 sm:px-5 py-1.5 rounded-xl text-white text-xs font-bold transition-all shadow-md active:scale-95 flex items-center gap-1.5 justify-center font-arabic min-w-[84px]"
+      >
+        @if (isPlaying()) {
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+          <span>إيقاف</span>
+        } @else {
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span>تشغيل</span>
+        }
+      </button>
+
+      <!-- Next Step Button -->
+      <button
+        (click)="next()"
+        [disabled]="currentStepIndex() >= totalSteps() - 1"
+        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#06070b] hover:bg-[#141724] disabled:opacity-30 disabled:cursor-not-allowed text-[#c9d2dc] text-xs font-semibold transition-all border border-[#23283c] active:scale-95 flex items-center gap-1 font-arabic"
+        title="الخطوة التالية"
+      >
+        <span class="hidden sm:inline">التالي</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+      <!-- Reset Button -->
+      <button
+        (click)="reset()"
+        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#06070b] hover:bg-[#141724] text-[#828c9b] hover:text-[#c9d2dc] text-xs font-medium transition-all border border-[#23283c] active:scale-95 flex items-center gap-1 font-arabic"
+        title="إعادة ضبط من البداية"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        <span>إعادة</span>
+      </button>
+    </div>
+
+    <!-- Group 2: Speed Selector & Custom Numbers Trigger -->
+    <div class="flex items-center gap-2">
+      <!-- Speed selector -->
+      <div class="flex items-center gap-1 bg-[#06070b] px-2.5 py-1 rounded-xl border border-[#23283c]">
+        <span class="text-[11px] text-[#828c9b] font-arabic select-none">السرعة:</span>
+        <select
+          [value]="playbackSpeed()"
+          (change)="onSpeedChange($event)"
+          dir="ltr"
+          class="bg-transparent text-xs text-[#c9d2dc] font-mono focus:outline-none cursor-pointer"
+        >
+          <option value="1600" class="bg-[#0e111a] text-[#c9d2dc]">0.5x</option>
+          <option value="800" class="bg-[#0e111a] text-[#c9d2dc]">1.0x</option>
+          <option value="450" class="bg-[#0e111a] text-[#c9d2dc]">1.5x</option>
+          <option value="200" class="bg-[#0e111a] text-[#c9d2dc]">2.0x</option>
+        </select>
+      </div>
+
+      <!-- Custom Numbers Toggle -->
+      <button
+        (click)="toggleCustomInput()"
+        [class.bg-[var(--color-blue)]/20]="isInputExpanded()"
+        [class.border-[var(--color-blue)]]="isInputExpanded()"
+        [class.text-[var(--color-blue)]]="isInputExpanded()"
+        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#06070b] hover:bg-[#141724] text-xs text-[#c9d2dc] font-semibold border border-[#23283c] transition-all flex items-center gap-1.5 font-arabic"
+      >
+        <svg class="w-3.5 h-3.5 text-[var(--color-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+        </svg>
+        <span class="hidden sm:inline">تخصيص الأرقام</span>
+        <span class="sm:hidden">أرقامك</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Expandable Custom Array Input Panel -->
+  @if (isInputExpanded()) {
+    <div class="p-3.5 sm:p-4 rounded-xl bg-[#06070b] border border-[var(--color-blue)]/40 shadow-inner space-y-3 transition-all animate-fadeIn">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <label for="customInput" class="text-xs font-bold text-[#c9d2dc] flex items-center gap-1.5 font-arabic">
+          <span>أدخل عناصر المصفوفة:</span>
+          <span class="text-[10px] text-[#828c9b] font-normal">(مفصولة بفواصل، مثل: 29, 10, 14, 37, 13)</span>
+        </label>
+        
+        <div class="flex items-center gap-1.5">
+          <button
+            (click)="setRandomArray()"
+            class="px-2 py-1 text-[11px] rounded-lg bg-[#141724] hover:bg-[#23283c] text-[var(--color-blue)] border border-[#23283c] transition font-arabic"
+          >
+            عشوائي 🎲
+          </button>
+          <button
+            (click)="setReversedArray()"
+            class="px-2 py-1 text-[11px] rounded-lg bg-[#141724] hover:bg-[#23283c] text-rose-400 border border-[#23283c] transition font-arabic"
+          >
+            معكوس 🔻
+          </button>
+          <button
+            (click)="setNearlySortedArray()"
+            class="px-2 py-1 text-[11px] rounded-lg bg-[#141724] hover:bg-[#23283c] text-[var(--color-green)] border border-[#23283c] transition font-arabic"
+          >
+            شبه مرتب 📈
+          </button>
+        </div>
+      </div>
+
+      <!-- Array Input + Optional Target x Input for Sequential Search -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div class="relative flex-1">
+          <input
+            id="customInput"
+            type="text"
+            [ngModel]="customInputText()"
+            (ngModelChange)="customInputText.set($event)"
+            placeholder="مثال: 50, 15, 30, 8, 92"
+            class="w-full px-3.5 py-2 rounded-xl bg-[#0e111a] border border-[#23283c] focus:border-[var(--color-blue)] focus:ring-1 focus:ring-[var(--color-blue)] text-xs font-mono text-[#c9d2dc] focus:outline-none"
+            (keydown.enter)="applyCustomArray()"
+          />
+        </div>
+
+        @if (isSearchAlgorithm()) {
+          <div class="flex items-center gap-1.5 bg-[#0e111a] px-3 py-1.5 rounded-xl border border-[#23283c] shrink-0">
+            <span class="text-xs font-arabic text-[#828c9b]">هدف البحث x:</span>
+            <input
+              type="number"
+              [ngModel]="searchTargetInput()"
+              (ngModelChange)="searchTargetInput.set($event)"
+              class="w-16 px-2 py-1 bg-[#06070b] rounded-lg border border-[#23283c] text-xs font-mono text-[var(--color-blue)] font-bold text-center focus:outline-none"
+            />
+          </div>
+        }
+
+        <button
+          (click)="applyCustomArray()"
+          class="px-4 py-2 rounded-xl bg-[var(--color-blue)] hover:brightness-110 text-white text-xs font-bold transition shadow-md shadow-[var(--color-blue)]/20 whitespace-nowrap active:scale-95 font-arabic"
+        >
+          تطبيق ✓
+        </button>
+      </div>
+
+      <!-- Validation Error Alert -->
+      @if (inputErrorMessage()) {
+        <div class="p-2 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2 font-arabic">
+          <span>⚠️</span>
+          <span>{{ inputErrorMessage() }}</span>
+        </div>
+      }
+    </div>
+  }
+
+</div>

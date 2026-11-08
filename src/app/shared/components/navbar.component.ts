@@ -14,7 +14,15 @@ export class NavbarComponent {
   protected readonly activeView = this.engine.activeView;
   protected readonly currentAlgorithm = this.engine.currentAlgorithm;
 
-  goToCatalog(): void {
-    this.engine.openCatalog();
+  goToChapters(): void {
+    this.engine.openChapters();
+  }
+
+  goToExam(): void {
+    this.engine.openExam();
+  }
+
+  goToCurrentChapter(): void {
+    this.engine.openChapterHub(this.engine.selectedChapterNumber(), 'algorithms');
   }
 }

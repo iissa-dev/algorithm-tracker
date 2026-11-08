@@ -17,6 +17,9 @@ export class MergeSortStrategy implements AlgorithmStrategy {
     badge: 'Chapter 2',
     status: 'active',
     isSearchAlgorithm: false,
+    hasTreeVisualization: true,
+    videoUrl: 'https://www.youtube.com/embed/sh3ax9qOmY8?si=pL2mzbkuBIECM7Tg',
+    videoTitle: 'شرح خوارزمية ترتيب الدمج (Merge Sort) - فَرِّقْ تَسُدْ',
     timeComplexity: {
       best: 'O(n log n)',
       average: 'O(n log n)',
@@ -165,11 +168,34 @@ export class MergeSortStrategy implements AlgorithmStrategy {
     });
 
     const runMergeSort = (left: number, right: number) => {
-      if (left >= right) return;
+      // Step: Check condition if (left < right)
+      if (left >= right) {
+        rawSteps.push({
+          array: [...arr],
+          activeIndices: [left],
+          sortedIndices: [left],
+          key: null,
+          lineCodeNumber: 2,
+          phaseNameAr: 'حالة التوقف (Base Case)',
+          descriptionAr: `النطاق [${left}] عنصر واحد فقط (${arr[left]}) ⬅ مرتب بالفعل، العودة من الاستدعاء.`,
+          actionType: 'subarray-sorted',
+          variables: {
+            i: left,
+            j: right,
+            key: null,
+            left,
+            right,
+            mid: null,
+            conditionDescription: `${left} < ${right} (خطأ: عنصر واحد)`,
+            isConditionTrue: false,
+          },
+        });
+        return;
+      }
 
       const mid = Math.floor((left + right) / 2);
 
-      // Divide step
+      // Step: Calculate mid
       rawSteps.push({
         array: [...arr],
         activeIndices: Array.from({ length: right - left + 1 }, (_, k) => left + k),
@@ -187,16 +213,55 @@ export class MergeSortStrategy implements AlgorithmStrategy {
           right,
           mid,
           conditionDescription: `mid = floor((${left}+${right})/2) = ${mid}`,
+          isConditionTrue: true,
         },
       });
 
-      // Recurse Left
+      // Step: Recurse Left Call -> MergeSort(A, left, mid)
+      rawSteps.push({
+        array: [...arr],
+        activeIndices: Array.from({ length: mid - left + 1 }, (_, k) => left + k),
+        sortedIndices: [],
+        key: null,
+        lineCodeNumber: 4,
+        phaseNameAr: 'استدعاء النصف الأيسر',
+        descriptionAr: `استدعاء MergeSort للنصف الأيسر: النطاق [${left}...${mid}].`,
+        actionType: 'divide',
+        variables: {
+          i: left,
+          j: mid,
+          key: null,
+          left,
+          right: mid,
+          mid,
+          conditionDescription: `MergeSort(A, ${left}, ${mid})`,
+        },
+      });
       runMergeSort(left, mid);
 
-      // Recurse Right
+      // Step: Recurse Right Call -> MergeSort(A, mid + 1, right)
+      rawSteps.push({
+        array: [...arr],
+        activeIndices: Array.from({ length: right - (mid + 1) + 1 }, (_, k) => mid + 1 + k),
+        sortedIndices: [],
+        key: null,
+        lineCodeNumber: 5,
+        phaseNameAr: 'استدعاء النصف الأيمن',
+        descriptionAr: `استدعاء MergeSort للنصف الأيمن: النطاق [${mid + 1}...${right}].`,
+        actionType: 'divide',
+        variables: {
+          i: mid + 1,
+          j: right,
+          key: null,
+          left: mid + 1,
+          right,
+          mid,
+          conditionDescription: `MergeSort(A, ${mid + 1}, ${right})`,
+        },
+      });
       runMergeSort(mid + 1, right);
 
-      // Merge Step
+      // Step: Call Merge(A, left, mid, right)
       rawSteps.push({
         array: [...arr],
         activeIndices: Array.from({ length: right - left + 1 }, (_, k) => left + k),
@@ -204,7 +269,7 @@ export class MergeSortStrategy implements AlgorithmStrategy {
         key: null,
         lineCodeNumber: 6,
         phaseNameAr: 'بدء الدمج (Merge)',
-        descriptionAr: `دمج النصفين [${left}...${mid}] و [${mid + 1}...${right}].`,
+        descriptionAr: `الآن دمج النصفين المرتبين: [${left}...${mid}] مع [${mid + 1}...${right}].`,
         actionType: 'merge',
         variables: {
           i: left,
@@ -213,7 +278,7 @@ export class MergeSortStrategy implements AlgorithmStrategy {
           left,
           right,
           mid,
-          conditionDescription: 'دمج الجزأين تصاعدياً',
+          conditionDescription: `Merge(A, ${left}, ${mid}, ${right})`,
         },
       });
 

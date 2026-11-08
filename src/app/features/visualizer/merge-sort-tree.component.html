@@ -1,0 +1,73 @@
+<div class="w-full flex flex-col">
+
+  <!-- Tree Info & Legend Header -->
+  <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-[#23283c]/60 bg-[#06070b]/40 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[var(--color-blue)]"></span>
+      <span class="font-arabic font-bold text-[#c9d2dc]">
+        شجرة التقسيم والاستدعاء الذاتي (Recursion Tree)
+      </span>
+      <span class="text-[10px] text-[#828c9b] font-mono">
+        Divide & Conquer
+      </span>
+    </div>
+
+    <!-- Minimal Tree Legend -->
+    <div class="flex items-center gap-2 text-[10px] font-arabic">
+      <span class="inline-flex items-center gap-1 text-[var(--color-blue)]">
+        <span class="w-2 h-2 rounded-sm bg-[var(--color-blue)]"></span>
+        تقسيم (Divide)
+      </span>
+      <span class="inline-flex items-center gap-1 text-[var(--color-green)]">
+        <span class="w-2 h-2 rounded-sm bg-[var(--color-green)]"></span>
+        دمج مرتب (Merge)
+      </span>
+    </div>
+  </div>
+
+  <!-- Scrollable Tree Canvas -->
+  <div class="tree-container min-h-[170px] sm:min-h-[200px] flex items-center justify-center">
+    @if (treeRoot(); as root) {
+      <div class="min-w-max mx-auto py-2">
+        <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: root }"></ng-container>
+      </div>
+    } @else {
+      <div class="text-xs text-[#828c9b] font-arabic py-8 text-center">
+        لا توجد عناصر لعرض الشجرة.
+      </div>
+    }
+  </div>
+
+  <!-- Recursive Node Template -->
+  <ng-template #nodeTemplate let-node>
+    <div class="tree-branch-item">
+      <!-- Node Box -->
+      <div
+        class="tree-node-box border text-xs sm:text-sm shadow-sm"
+        [class.node-active-divide]="isNodeDividing(node)"
+        [class.node-active-merge]="isNodeMerging(node)"
+        [class.bg-[#0e111a]]="!isNodeActive(node)"
+        [class.border-[#23283c]]="!isNodeActive(node)"
+        [class.text-[#c9d2dc]]="!isNodeActive(node)"
+        [title]="'نطاق: [' + node.left + '..' + node.right + ']'"
+      >
+        <span class="text-[#828c9b] font-normal text-[10px] font-mono" *ngIf="!node.isLeaf">
+          [{{ node.left }}..{{ node.right }}]
+        </span>
+        <span class="font-mono font-bold tracking-tight">
+          [{{ getNodeValues(node).join(', ') }}]
+        </span>
+      </div>
+
+      <!-- Recursive Children Nodes -->
+      @if (node.children && node.children.length > 0) {
+        <div class="tree-children-container">
+          @for (child of node.children; track child.id) {
+            <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: child }"></ng-container>
+          }
+        </div>
+      }
+    </div>
+  </ng-template>
+
+</div>

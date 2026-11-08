@@ -6,12 +6,22 @@
   <!-- Main Container -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-6 lg:px-8 py-3 sm:py-5">
 
-    <!-- FIRST PAGE: Algorithm Content Cards Catalog -->
-    @if (activeView() === 'catalog') {
-    <app-algorithm-catalog></app-algorithm-catalog>
+    <!-- 1. CHAPTERS CATALOG VIEW -->
+    @if (activeView() === 'chapters') {
+      <app-chapter-catalog></app-chapter-catalog>
     }
 
-    <!-- VISUALIZER WORKBENCH -->
+    <!-- 2. CHAPTER HUB (Summary + Algorithms) -->
+    @if (activeView() === 'chapter-hub') {
+      <app-chapter-hub></app-chapter-hub>
+    }
+
+    <!-- 3. MIDTERM EXAM VIEW (Mid 1) -->
+    @if (activeView() === 'exam') {
+      <app-midterm-exam></app-midterm-exam>
+    }
+
+    <!-- 4. VISUALIZER WORKBENCH -->
     @if (activeView() === 'visualizer') {
     <div class="space-y-3 sm:space-y-4">
 
@@ -20,10 +30,10 @@
         class="p-2.5 sm:p-3.5 rounded-2xl bg-charcoal-850 border border-charcoal-border flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-lg">
         <div class="flex items-center gap-2.5">
           <button (click)="engine.openCatalog()"
-            class="px-2.5 py-1 rounded-xl bg-charcoal-950 hover:bg-charcoal-800 border border-charcoal-border text-xs font-semibold text-[#828c9b] hover:text-silver-300 transition flex items-center gap-1 font-arabic active:scale-95 shrink-0"
-            title="العودة لقائمة الخوارزميات">
-            <span>➔</span>
-            <span>الرئيسية</span>
+            class="px-2.5 py-1 rounded-xl bg-charcoal-950 hover:bg-charcoal-800 border border-charcoal-border text-xs font-semibold text-[#828c9b] hover:text-silver-300 transition flex items-center gap-1.5 font-arabic active:scale-95 shrink-0"
+            title="العودة للفصل">
+            <span>&larr;</span>
+            <span>الفصل {{ currentAlgorithm().metadata.chapterNumber }}</span>
           </button>
 
           <div class="flex items-center gap-2 flex-wrap">
@@ -95,5 +105,19 @@
           Atieh</a></span>
     </div>
   </footer>
+
+  <!-- Floating Scroll To Top Button -->
+  @if (showScrollTop()) {
+    <button
+      type="button"
+      (click)="scrollToTop()"
+      class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-(--color-blue) hover:bg-(--color-blue)/90 text-white shadow-xl shadow-(--color-blue)/30 border border-white/20 transition-all duration-300 active:scale-90 group cursor-pointer hover:-translate-y-1"
+      title="العودة للأعلى / Scroll to Top"
+      aria-label="العودة للأعلى">
+      <svg class="w-5 h-5 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  }
 
 </div>

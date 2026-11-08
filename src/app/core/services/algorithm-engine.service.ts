@@ -10,13 +10,26 @@ import { InsertionSortStrategy } from '../algorithms/insertion-sort.strategy';
 import { MergeSortStrategy } from '../algorithms/merge-sort.strategy';
 import { SequentialSearchStrategy } from '../algorithms/sequential-search.strategy';
 
+export interface ChapterInfo {
+  number: number;
+  titleEn: string;
+  titleAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  topics: string[];
+  algorithmIds: string[];
+  badgeColor: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AlgorithmEngineService implements OnDestroy {
   private readonly registry = inject(AlgorithmRegistryService);
 
-  readonly activeView = signal<'catalog' | 'visualizer'>('catalog');
+  readonly activeView = signal<'chapters' | 'chapter-hub' | 'visualizer' | 'exam'>('chapters');
+  readonly selectedChapterNumber = signal<number>(2);
+  readonly activeChapterTab = signal<'summary' | 'algorithms'>('summary');
 
   readonly currentArray = signal<number[]>([29, 10, 14, 37, 13]);
   readonly searchTarget = signal<number>(14); // For Sequential Search
@@ -27,8 +40,51 @@ export class AlgorithmEngineService implements OnDestroy {
   readonly isPlaying = signal<boolean>(false);
   readonly playbackSpeedMs = signal<number>(800);
 
+  readonly chapters: ChapterInfo[] = [
+    {
+      number: 1,
+      titleEn: 'The Role of Algorithms in Computing',
+      titleAr: 'دور الخوارزميات في الحوسبة',
+      descriptionEn: 'Algorithm Definition, Problem-Solving Lifecycle, Correctness vs Efficiency, Euclidean GCD, and the 100x Hardware vs Algorithm Benchmark.',
+      descriptionAr: 'تعريف الخوارزمية، دورة حياة حل المشكلات، الصحة والكفاءة، خوارزمية إقليدس GCD، ومقارنة تفوق الخوارزمية على عتاد أسرع بـ 100 مرة.',
+      topics: ['Algorithm Definition', 'Problem-Solving Process', 'Correctness & Efficiency', 'Euclidean GCD', 'Hardware vs Algorithm Scaling'],
+      algorithmIds: [],
+      badgeColor: 'var(--color-beige)',
+    },
+    {
+      number: 2,
+      titleEn: 'Getting Started',
+      titleAr: 'البداية والترتيب',
+      descriptionEn: 'The Sorting Problem, Insertion Sort, RAM Model of Computation, and Divide-and-Conquer Merge Sort.',
+      descriptionAr: 'مسألة الترتيب، ترتيب الإدراج، نموذج حاسوب RAM، وشجرة الدمج وفرّق تسد.',
+      topics: ['Sorting Problem', 'Insertion Sort', 'RAM Model', 'Divide-and-Conquer', 'Merge Sort Recurrence'],
+      algorithmIds: ['insertion-sort', 'merge-sort'],
+      badgeColor: 'var(--color-blue)',
+    },
+    {
+      number: 3,
+      titleEn: 'Growth of Functions',
+      titleAr: 'نمو الدوال والتعقيد',
+      descriptionEn: 'Sequential Search, Best vs Worst Case Behavior, and Asymptotic Notations (Big-O, Omega, Theta).',
+      descriptionAr: 'البحث التسلسلي، تحليل الحالة الفضلى والأسوأ، ورموز التعقيد المقارب.',
+      topics: ['Sequential Search', 'Best vs Worst Case', 'Asymptotic Notation', 'Order of Growth'],
+      algorithmIds: ['sequential-search'],
+      badgeColor: 'var(--color-green)',
+    },
+  ];
+
   readonly catalog = computed<AlgorithmMetadata[]>(() => {
     return this.registry.getCatalog();
+  });
+
+  readonly currentChapterAlgorithms = computed<AlgorithmMetadata[]>(() => {
+    const chNum = this.selectedChapterNumber();
+    return this.registry.getCatalog().filter(algo => algo.chapterNumber === chNum);
+  });
+
+  readonly currentChapterInfo = computed<ChapterInfo>(() => {
+    const chNum = this.selectedChapterNumber();
+    return this.chapters.find(c => c.number === chNum) || this.chapters[0];
   });
 
   readonly currentAlgorithm = computed<AlgorithmStrategy>(() => {
@@ -81,13 +137,39 @@ export class AlgorithmEngineService implements OnDestroy {
   openVisualizer(algorithmId: string): void {
     this.pause();
     this.selectedAlgorithmId.set(algorithmId);
+    const algo = this.registry.get(algorithmId);
+    if (algo?.metadata?.chapterNumber) {
+      this.selectedChapterNumber.set(algo.metadata.chapterNumber);
+    }
     this.currentStepIndex.set(0);
     this.activeView.set('visualizer');
   }
 
+  openChapters(): void {
+    this.pause();
+    this.activeView.set('chapters');
+  }
+
+  openExam(): void {
+    this.pause();
+    this.activeView.set('exam');
+  }
+
+  openChapterHub(chapterNumber: number, tab: 'summary' | 'algorithms' = 'summary'): void {
+    this.pause();
+    this.selectedChapterNumber.set(chapterNumber);
+    this.activeChapterTab.set(tab);
+    this.activeView.set('chapter-hub');
+  }
+
+  setChapterTab(tab: 'summary' | 'algorithms'): void {
+    this.activeChapterTab.set(tab);
+  }
+
   openCatalog(): void {
     this.pause();
-    this.activeView.set('catalog');
+    // Return to the chapter hub of the current chapter
+    this.activeView.set('chapter-hub');
   }
 
   setSearchTarget(target: number): void {

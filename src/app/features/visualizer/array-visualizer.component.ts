@@ -1,11 +1,13 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlgorithmEngineService } from '../../core/services/algorithm-engine.service';
+import { MergeSortTreeComponent } from './merge-sort-tree.component';
+import { VideoPlayerComponent } from './video-player.component';
 
 @Component({
   selector: 'app-array-visualizer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MergeSortTreeComponent, VideoPlayerComponent],
   templateUrl: './array-visualizer.component.html',
   styleUrl: './array-visualizer.component.css',
 })
@@ -14,6 +16,28 @@ export class ArrayVisualizerComponent {
 
   protected readonly currentStep = this.engine.currentStep;
   protected readonly currentAlgorithm = this.engine.currentAlgorithm;
+
+  readonly activeTab = signal<'visualizer' | 'tree' | 'video'>('visualizer');
+
+  protected readonly hasTree = computed(() => {
+    return this.currentAlgorithm().metadata.hasTreeVisualization === true;
+  });
+
+  protected readonly hasVideo = computed(() => {
+    return !!this.currentAlgorithm().metadata.videoUrl;
+  });
+
+  protected readonly currentTab = computed<'visualizer' | 'tree' | 'video'>(() => {
+    const tab = this.activeTab();
+    if (tab === 'tree' && !this.hasTree()) return 'visualizer';
+    if (tab === 'video' && !this.hasVideo()) return 'visualizer';
+    return tab;
+  });
+
+  setTab(tab: 'visualizer' | 'tree' | 'video'): void {
+    this.activeTab.set(tab);
+  }
+
   protected readonly isSearchAlgorithm = computed(() => {
     return this.currentAlgorithm().metadata.isSearchAlgorithm === true;
   });

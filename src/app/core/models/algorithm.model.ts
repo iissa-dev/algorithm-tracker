@@ -58,6 +58,9 @@ export interface AlgorithmMetadata {
   badge?: string;
   status: 'active';
   isSearchAlgorithm?: boolean;
+  hasTreeVisualization?: boolean;
+  videoUrl?: string;
+  videoTitle?: string;
   timeComplexity: {
     best: string;
     average: string;

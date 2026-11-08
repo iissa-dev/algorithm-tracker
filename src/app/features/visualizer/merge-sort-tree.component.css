@@ -1,0 +1,115 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.tree-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1.5rem 0.5rem;
+  scrollbar-width: thin;
+}
+
+.tree-node-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.tree-children-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding-top: 22px;
+}
+
+/* Vertical line from parent center down */
+.tree-children-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid #23283c;
+  width: 0;
+  height: 22px;
+  transform: translateX(-50%);
+}
+
+.tree-branch-item {
+  position: relative;
+  padding: 22px 6px 0 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Horizontal connectors for left & right siblings */
+.tree-branch-item::before,
+.tree-branch-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid #23283c;
+  width: 50%;
+  height: 22px;
+}
+
+.tree-branch-item::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid #23283c;
+}
+
+.tree-branch-item:only-child::after,
+.tree-branch-item:only-child::before {
+  display: none;
+}
+
+.tree-branch-item:only-child {
+  padding-top: 0;
+}
+
+.tree-branch-item:first-child::before {
+  border: 0 none;
+}
+
+.tree-branch-item:last-child::after {
+  border: 0 none;
+}
+
+.tree-branch-item:last-child::before {
+  border-right: 2px solid #23283c;
+  border-radius: 0 6px 0 0;
+}
+
+.tree-branch-item:first-child::after {
+  border-radius: 6px 0 0 0;
+}
+
+/* Active Highlight Glow */
+.node-active-divide {
+  background-color: rgba(71, 113, 180, 0.25) !important;
+  border-color: var(--color-blue) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(71, 113, 180, 0.6);
+  transform: scale(1.08);
+  z-index: 10;
+}
+
+.node-active-merge {
+  background-color: rgba(160, 189, 38, 0.25) !important;
+  border-color: var(--color-green) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(160, 189, 38, 0.6);
+  transform: scale(1.08);
+  z-index: 10;
+}

@@ -71,6 +71,10 @@
 body {
   font-family: var(--font-sans);
   background-color: #06070b;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(71, 113, 180, 0.08) 0%, transparent 60%),
+    radial-gradient(rgba(35, 40, 60, 0.3) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px;
   color: #c9d2dc;
   overflow-x: hidden;
 }

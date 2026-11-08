@@ -17,6 +17,8 @@ export class InsertionSortStrategy implements AlgorithmStrategy {
     badge: 'Chapter 2',
     status: 'active',
     isSearchAlgorithm: false,
+    videoUrl: 'https://www.youtube.com/embed/hm5qvaSnnc8?si=Q-1Avd0C2ys8-VuO',
+    videoTitle: 'شرح خوارزمية ترتيب الإدراج (Insertion Sort)',
     timeComplexity: {
       best: 'O(n)',
       average: 'O(n²)',

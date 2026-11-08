@@ -1,0 +1,42 @@
+<div class="w-full flex flex-col p-2.5 sm:p-4 space-y-3">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between gap-2 border-b border-[#23283c]/60 pb-2">
+    <div class="flex items-center gap-2">
+      <span class="text-sm">📺</span>
+      <div>
+        <h4 class="text-xs sm:text-sm font-bold text-white font-arabic">
+          {{ videoTitle() }}
+        </h4>
+        <span class="text-[10px] text-[#828c9b] font-mono">
+          {{ currentAlgorithm().metadata.chapterTitle }}
+        </span>
+      </div>
+    </div>
+
+    <span class="px-2 py-0.5 rounded-md bg-[var(--color-blue)]/15 text-[var(--color-blue)] border border-[var(--color-blue)]/30 text-[10px] font-mono font-bold">
+      Lecture Video
+    </span>
+  </div>
+
+  <!-- Responsive 16:9 Video Container -->
+  <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-[#23283c] bg-[#06070b] shadow-2xl">
+    <iframe
+      [src]="safeVideoUrl()"
+      title="YouTube video player"
+      class="w-full h-full border-0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <!-- Helpful tip below video -->
+  <div class="flex items-center gap-2 text-[11px] text-[#828c9b] font-arabic bg-[#06070b]/60 px-3 py-2 rounded-xl border border-[#23283c]/50">
+    <span class="text-[var(--color-blue)]">💡</span>
+    <span>
+      يمكنك التبديل بين تبويب <strong>المحاكي</strong> لمشاهدة الخطوات الحية وتبويب <strong>الفيديو</strong> لمتابعة الشرح النظري في أي وقت.
+    </span>
+  </div>
+
+</div>

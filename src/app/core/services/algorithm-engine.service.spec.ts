@@ -13,11 +13,12 @@ describe('AlgorithmEngineService', () => {
     service = TestBed.inject(AlgorithmEngineService);
   });
 
-  it('should initialize with 3 algorithms from Chapters 2 & 3', () => {
-    expect(service.catalog().length).toBe(3);
+  it('should initialize with 4 algorithms from Chapters 2 & 3', () => {
+    expect(service.catalog().length).toBe(4);
     const ids = service.catalog().map((a) => a.id);
     expect(ids).toContain('insertion-sort');
     expect(ids).toContain('merge-sort');
+    expect(ids).toContain('quick-sort');
     expect(ids).toContain('sequential-search');
   });
 
@@ -34,6 +35,14 @@ describe('AlgorithmEngineService', () => {
     expect(service.selectedAlgorithmId()).toBe('merge-sort');
     expect(service.steps().length).toBeGreaterThan(0);
     expect(service.currentAlgorithm().metadata.chapterNumber).toBe(2);
+  });
+
+  it('should switch algorithm to quick sort and compute steps', () => {
+    service.openVisualizer('quick-sort');
+    expect(service.selectedAlgorithmId()).toBe('quick-sort');
+    expect(service.steps().length).toBeGreaterThan(0);
+    expect(service.currentAlgorithm().metadata.chapterNumber).toBe(2);
+    expect(service.currentAlgorithm().metadata.hasTreeVisualization).toBe(true);
   });
 
   it('should switch algorithm to sequential search and search target', () => {

@@ -8,6 +8,7 @@ import {
 import { AlgorithmRegistryService } from '../algorithms/algorithm-registry.service';
 import { InsertionSortStrategy } from '../algorithms/insertion-sort.strategy';
 import { MergeSortStrategy } from '../algorithms/merge-sort.strategy';
+import { QuickSortStrategy } from '../algorithms/quick-sort.strategy';
 import { SequentialSearchStrategy } from '../algorithms/sequential-search.strategy';
 
 export interface ChapterInfo {
@@ -55,10 +56,10 @@ export class AlgorithmEngineService implements OnDestroy {
       number: 2,
       titleEn: 'Getting Started',
       titleAr: 'البداية والترتيب',
-      descriptionEn: 'The Sorting Problem, Insertion Sort, RAM Model of Computation, and Divide-and-Conquer Merge Sort.',
-      descriptionAr: 'مسألة الترتيب، ترتيب الإدراج، نموذج حاسوب RAM، وشجرة الدمج وفرّق تسد.',
-      topics: ['Sorting Problem', 'Insertion Sort', 'RAM Model', 'Divide-and-Conquer', 'Merge Sort Recurrence'],
-      algorithmIds: ['insertion-sort', 'merge-sort'],
+      descriptionEn: 'The Sorting Problem, Insertion Sort, RAM Model of Computation, and Divide-and-Conquer (Merge Sort & Quick Sort).',
+      descriptionAr: 'مسألة الترتيب، ترتيب الإدراج، نموذج حاسوب RAM، وشجرة التقسيم وفرّق تسد (ترتيب الدمج والترتيب السريع).',
+      topics: ['Sorting Problem', 'Insertion Sort', 'RAM Model', 'Divide-and-Conquer', 'Merge Sort', 'Quick Sort'],
+      algorithmIds: ['insertion-sort', 'merge-sort', 'quick-sort'],
       badgeColor: 'var(--color-blue)',
     },
     {
@@ -122,6 +123,8 @@ export class AlgorithmEngineService implements OnDestroy {
       return InsertionSortStrategy.getHighlightedLine(step.lineCodeNumber, lang);
     } else if (algoId === 'merge-sort') {
       return MergeSortStrategy.getHighlightedLine(step.lineCodeNumber, lang);
+    } else if (algoId === 'quick-sort') {
+      return QuickSortStrategy.getHighlightedLine(step.lineCodeNumber, lang);
     } else if (algoId === 'sequential-search') {
       return SequentialSearchStrategy.getHighlightedLine(step.lineCodeNumber, lang);
     }

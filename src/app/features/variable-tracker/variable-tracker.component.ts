@@ -21,6 +21,10 @@ export class VariableTrackerComponent {
     return this.currentAlgorithm().metadata.id === 'merge-sort';
   });
 
+  protected readonly isQuickSort = computed(() => {
+    return this.currentAlgorithm().metadata.id === 'quick-sort';
+  });
+
   protected readonly variables = computed(() => {
     return this.currentStep()?.variables ?? null;
   });

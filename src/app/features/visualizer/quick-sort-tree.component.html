@@ -1,0 +1,115 @@
+<div class="w-full flex flex-col">
+
+  <!-- Tree Info & Legend Header -->
+  <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-[#23283c]/60 bg-[#06070b]/40 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+      <span class="font-arabic font-bold text-[#c9d2dc]">
+        شجرة التقسيم والمحور (Quick Sort Partition Tree)
+      </span>
+      <span class="text-[10px] text-[#828c9b] font-mono">
+        Divide & Conquer
+      </span>
+    </div>
+
+    <!-- Minimal Tree Legend -->
+    <div class="flex flex-wrap items-center gap-2 text-[10px] font-arabic">
+      <span class="inline-flex items-center gap-1 text-amber-400">
+        <span class="w-2 h-2 rounded-sm bg-amber-400"></span>
+        المحور (Pivot)
+      </span>
+      <span class="inline-flex items-center gap-1 text-[var(--color-blue)]">
+        <span class="w-2 h-2 rounded-sm bg-[var(--color-blue)]"></span>
+        تقسيم (Partition)
+      </span>
+      <span class="inline-flex items-center gap-1 text-[var(--color-green)]">
+        <span class="w-2 h-2 rounded-sm bg-[var(--color-green)]"></span>
+        موضع نهائي (Settled)
+      </span>
+    </div>
+  </div>
+
+  <!-- Scrollable Tree Canvas -->
+  <div class="tree-container min-h-[170px] sm:min-h-[200px] flex items-center justify-center">
+    @if (treeRoot(); as root) {
+      <div class="min-w-max mx-auto py-2">
+        <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: root }"></ng-container>
+      </div>
+    } @else {
+      <div class="text-xs text-[#828c9b] font-arabic py-8 text-center">
+        لا توجد عناصر لعرض الشجرة.
+      </div>
+    }
+  </div>
+
+  <!-- Recursive Node Template -->
+  <ng-template #nodeTemplate let-node>
+    <div class="tree-branch-item">
+      <!-- Node Box -->
+      <div
+        class="tree-node-box border text-xs sm:text-sm shadow-sm flex flex-col items-center gap-1"
+        [class.node-active-partition]="isNodePartitioning(node)"
+        [class.node-active-settled]="isNodeSettled(node)"
+        [class.bg-[#0e111a]]="!isNodeActive(node)"
+        [class.border-[#23283c]]="!isNodeActive(node)"
+        [class.text-[#c9d2dc]]="!isNodeActive(node)"
+        [title]="'نطاق: [' + node.left + '..' + node.right + ']'"
+      >
+        <div class="flex items-center gap-1.5 w-full justify-between text-[10px]">
+          <div class="flex items-center gap-1">
+            <span class="text-[#828c9b] font-normal font-mono">
+              [{{ node.left }}..{{ node.right }}]
+            </span>
+            @if (node.branchRole && node.branchRole !== 'root') {
+              <span
+                [class.bg-[var(--color-blue)]/20]="node.branchRole.includes('≤')"
+                [class.text-[var(--color-blue)]]="node.branchRole.includes('≤')"
+                [class.border-[var(--color-blue)]/40]="node.branchRole.includes('≤')"
+                [class.bg-purple-500/20]="node.branchRole.includes('>')"
+                [class.text-purple-400]="node.branchRole.includes('>')"
+                [class.border-purple-500/40]="node.branchRole.includes('>')"
+                class="px-1 py-0.2 rounded border text-[9px] font-mono font-bold"
+              >
+                {{ node.branchRole }}
+              </span>
+            }
+          </div>
+
+          @if (!node.isLeaf && (isNodeActive(node) || isNodePartitioned(node))) {
+            <span class="px-1 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40 font-mono text-[9px] font-bold">
+              P = {{ node.pivotValue }}
+            </span>
+          }
+        </div>
+
+        <div class="font-mono font-bold tracking-tight flex items-center gap-1">
+          <span>[</span>
+          @for (val of getNodeValues(node); track $index) {
+            <span
+              [class.text-amber-400]="isPivotElement(node, $index)"
+              [class.font-extrabold]="isPivotElement(node, $index)"
+              [class.underline]="isPivotElement(node, $index)"
+              [class.underline-offset-2]="isPivotElement(node, $index)"
+            >
+              {{ val }}
+            </span>
+            @if ($index < getNodeValues(node).length - 1) {
+              <span class="text-[#828c9b]/60">,</span>
+            }
+          }
+          <span>]</span>
+        </div>
+      </div>
+
+      <!-- Recursive Children Nodes (Left: <= Pivot, Right: > Pivot) -->
+      @if (node.children && node.children.length > 0) {
+        <div class="tree-children-container">
+          @for (child of node.children; track child.id) {
+            <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: child }"></ng-container>
+          }
+        </div>
+      }
+    </div>
+  </ng-template>
+
+</div>

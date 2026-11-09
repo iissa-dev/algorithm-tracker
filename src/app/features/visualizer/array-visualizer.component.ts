@@ -2,12 +2,13 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlgorithmEngineService } from '../../core/services/algorithm-engine.service';
 import { MergeSortTreeComponent } from './merge-sort-tree.component';
+import { QuickSortTreeComponent } from './quick-sort-tree.component';
 import { VideoPlayerComponent } from './video-player.component';
 
 @Component({
   selector: 'app-array-visualizer',
   standalone: true,
-  imports: [CommonModule, MergeSortTreeComponent, VideoPlayerComponent],
+  imports: [CommonModule, MergeSortTreeComponent, QuickSortTreeComponent, VideoPlayerComponent],
   templateUrl: './array-visualizer.component.html',
   styleUrl: './array-visualizer.component.css',
 })
@@ -113,8 +114,36 @@ export class ArrayVisualizerComponent {
     return step?.actionType === 'insert' && step.activeIndices.includes(index);
   }
 
+  isSwapping(index: number): boolean {
+    const step = this.currentStep();
+    return step?.actionType === 'swap' && step.activeIndices.includes(index);
+  }
+
+  isPivot(index: number): boolean {
+    const step = this.currentStep();
+    if (!step) return false;
+    const algoId = this.currentAlgorithm().metadata.id;
+    if (algoId !== 'quick-sort') return false;
+    if (step.variables?.pivotIndex === index) return true;
+    if (step.actionType === 'pivot' && step.activeIndices.includes(index)) return true;
+    if (
+      step.variables?.pivot !== null &&
+      step.variables?.pivot !== undefined &&
+      step.variables?.right === index &&
+      (step.actionType === 'compare' ||
+        step.actionType === 'swap' ||
+        step.actionType === 'partition' ||
+        step.actionType === 'select-key')
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   getAnimationClass(index: number): string {
     if (this.isAllSorted() || this.isFound(index)) return 'anim-all-sorted';
+    if (this.isSwapping(index)) return 'anim-swap';
+    if (this.isPivot(index)) return 'anim-pivot';
     if (this.isInserting(index)) return 'anim-insert';
     if (this.isShifting(index)) return 'anim-shift';
     if (this.isComparing(index)) return 'anim-compare';

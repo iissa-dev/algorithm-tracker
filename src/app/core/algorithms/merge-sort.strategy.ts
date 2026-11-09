@@ -44,7 +44,7 @@ export class MergeSortStrategy implements AlgorithmStrategy {
       'Merge(A, left, mid, right) {',
       '  i = left;  j = mid + 1;',
       '  while (i <= mid && j <= right) {',
-      '    if (A[i] < A[j]) tmp[k++] = A[i++];',
+      '    if (A[i] <= A[j]) tmp[k++] = A[i++];',
       '    else tmp[k++] = A[j++];',
       '  }',
       '  copy remaining and write back to A',
@@ -63,8 +63,10 @@ export class MergeSortStrategy implements AlgorithmStrategy {
       'void Merge(int[] A, int left, int mid, int right) {',
       '    int[] tmp = new int[right - left + 1];',
       '    int i = left, j = mid + 1, k = 0;',
-      '    while (i <= mid && j <= right)',
-      '        tmp[k++] = (A[i] <= A[j]) ? A[i++] : A[j++];',
+      '    while (i <= mid && j <= right) {',
+      '        if (A[i] <= A[j]) tmp[k++] = A[i++];',
+      '        else tmp[k++] = A[j++];',
+      '    }',
       '    while (i <= mid) tmp[k++] = A[i++];',
       '    while (j <= right) tmp[k++] = A[j++];',
       '    Array.Copy(tmp, 0, A, left, tmp.Length);',
@@ -83,8 +85,10 @@ export class MergeSortStrategy implements AlgorithmStrategy {
       'void merge(std::vector<int>& A, int left, int mid, int right) {',
       '    std::vector<int> tmp(right - left + 1);',
       '    int i = left, j = mid + 1, k = 0;',
-      '    while (i <= mid && j <= right)',
-      '        tmp[k++] = (A[i] <= A[j]) ? A[i++] : A[j++];',
+      '    while (i <= mid && j <= right) {',
+      '        if (A[i] <= A[j]) tmp[k++] = A[i++];',
+      '        else tmp[k++] = A[j++];',
+      '    }',
       '    while (i <= mid) tmp[k++] = A[i++];',
       '    while (j <= right) tmp[k++] = A[j++];',
       '    for (int p = 0; p < k; p++) A[left + p] = tmp[p];',
@@ -102,10 +106,11 @@ export class MergeSortStrategy implements AlgorithmStrategy {
           case 4: return 5; // MergeSort left
           case 5: return 6; // MergeSort right
           case 6: return 7; // Merge call
-          case 7: return 11; // while loop in merge
-          case 8: return 12; // compare A[i] < A[j]
-          case 9: return 15; // copy back
-          case 10: return 9; // done
+          case 7: return 12; // while loop in merge
+          case 8: return 13; // if (A[i] <= A[j]) branch
+          case 9: return 14; // else branch
+          case 10: return 16; // copy remaining and write back
+          case 11: return 2; // done
           default: return 2;
         }
       case 'csharp':
@@ -116,10 +121,11 @@ export class MergeSortStrategy implements AlgorithmStrategy {
           case 4: return 5;
           case 5: return 6;
           case 6: return 7;
-          case 7: return 13;
-          case 8: return 14;
-          case 9: return 17;
-          case 10: return 8;
+          case 7: return 13; // while loop in merge
+          case 8: return 14; // if (A[i] <= A[j]) branch
+          case 9: return 15; // else branch
+          case 10: return 19; // Array.Copy
+          case 11: return 2; // done
           default: return 2;
         }
       case 'cpp':
@@ -130,10 +136,11 @@ export class MergeSortStrategy implements AlgorithmStrategy {
           case 4: return 5;
           case 5: return 6;
           case 6: return 7;
-          case 7: return 13;
-          case 8: return 14;
-          case 9: return 17;
-          case 10: return 8;
+          case 7: return 13; // while loop in merge
+          case 8: return 14; // if (A[i] <= A[j]) branch
+          case 9: return 15; // else branch
+          case 10: return 19; // for copy back
+          case 11: return 2; // done
           default: return 2;
         }
     }
@@ -288,32 +295,74 @@ export class MergeSortStrategy implements AlgorithmStrategy {
       let j = mid + 1;
 
       while (i <= mid && j <= right) {
-        // Compare step
-        const isSmaller = arr[i] <= arr[j];
+        // Step 1: while condition check
         rawSteps.push({
           array: [...arr],
           activeIndices: [i, j],
           sortedIndices: [],
           key: null,
-          lineCodeNumber: 8,
-          phaseNameAr: 'مقارنة الدمج',
-          descriptionAr: `مقارنة: ${arr[i]} مع ${arr[j]} ⬅ الأصغر هو ${isSmaller ? arr[i] : arr[j]}.`,
+          lineCodeNumber: 7,
+          phaseNameAr: 'شرط حلقة الدمج',
+          descriptionAr: `فحص شرط الاستمرار: i (${i}) <= mid (${mid}) و j (${j}) <= right (${right}) ⬅ محقق، الانتقال للمقارنة.`,
           actionType: 'compare',
           variables: {
             i,
             j,
-            key: isSmaller ? arr[i] : arr[j],
+            key: null,
             left,
             right,
             mid,
-            conditionDescription: `${arr[i]} <= ${arr[j]} : ${isSmaller}`,
+            conditionDescription: `i (${i}) <= ${mid} && j (${j}) <= ${right}`,
+            isConditionTrue: true,
           },
         });
 
+        // Step 2: if / else branch
+        const isSmaller = arr[i] <= arr[j];
         if (isSmaller) {
+          rawSteps.push({
+            array: [...arr],
+            activeIndices: [i, j],
+            sortedIndices: [],
+            key: null,
+            lineCodeNumber: 8,
+            phaseNameAr: 'فرع if (العنصر الأيسر)',
+            descriptionAr: `مقارنة: A[${i}] (${arr[i]}) <= A[${j}] (${arr[j]}) (صحيح) ⬅ تنفيذ فرع if: نسخ ${arr[i]} وزيادة i.`,
+            actionType: 'compare',
+            variables: {
+              i,
+              j,
+              key: arr[i],
+              left,
+              right,
+              mid,
+              conditionDescription: `${arr[i]} <= ${arr[j]} : صحيح (if)`,
+              isConditionTrue: true,
+            },
+          });
           tmp.push(arr[i]);
           i++;
         } else {
+          rawSteps.push({
+            array: [...arr],
+            activeIndices: [i, j],
+            sortedIndices: [],
+            key: null,
+            lineCodeNumber: 9,
+            phaseNameAr: 'فرع else (العنصر الأيمن)',
+            descriptionAr: `مقارنة: A[${i}] (${arr[i]}) <= A[${j}] (${arr[j]}) (خطأ: ${arr[j]} أصغر) ⬅ تنفيذ فرع else: نسخ ${arr[j]} وزيادة j.`,
+            actionType: 'compare',
+            variables: {
+              i,
+              j,
+              key: arr[j],
+              left,
+              right,
+              mid,
+              conditionDescription: `${arr[i]} <= ${arr[j]} : خطأ (else)`,
+              isConditionTrue: false,
+            },
+          });
           tmp.push(arr[j]);
           j++;
         }
@@ -339,7 +388,7 @@ export class MergeSortStrategy implements AlgorithmStrategy {
         activeIndices: Array.from({ length: right - left + 1 }, (_, k) => left + k),
         sortedIndices: Array.from({ length: right - left + 1 }, (_, k) => left + k),
         key: null,
-        lineCodeNumber: 9,
+        lineCodeNumber: 10,
         phaseNameAr: 'تم الدمج',
         descriptionAr: `تم دمج النطاق [${left}...${right}] بنجاح وهو الآن مرتب.`,
         actionType: 'subarray-sorted',
@@ -363,7 +412,7 @@ export class MergeSortStrategy implements AlgorithmStrategy {
       activeIndices: [],
       sortedIndices: Array.from({ length: n }, (_, k) => k),
       key: null,
-      lineCodeNumber: 10,
+      lineCodeNumber: 11,
       phaseNameAr: 'اكتمل الترتيب',
       descriptionAr: 'اكتمل الترتيب: جميع العناصر مدمجة ومرتبة بالكامل.',
       actionType: 'all-sorted',

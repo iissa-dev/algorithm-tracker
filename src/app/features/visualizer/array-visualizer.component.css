@@ -87,3 +87,36 @@
 .anim-all-sorted {
   animation: sorted-shimmer 2s ease-in-out infinite;
 }
+
+/* QuickSort Swap Animation */
+@keyframes swap-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.08);
+    box-shadow: 0 0 16px #f43f5e;
+  }
+}
+
+.anim-swap {
+  animation: swap-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  z-index: 25;
+}
+
+/* QuickSort Pivot Glow */
+@keyframes pivot-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px #f59e0b;
+    transform: scale(1.03);
+  }
+  50% {
+    box-shadow: 0 0 18px #f59e0b;
+    transform: scale(1.07);
+  }
+}
+
+.anim-pivot {
+  animation: pivot-glow 1s ease-in-out infinite;
+  z-index: 22;
+}

@@ -117,6 +117,56 @@
         </div>
       </div>
 
+    <!-- ELSE IF QUICK SORT (Chapter 2) -->
+    } @else if (isQuickSort()) {
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">المحور (Pivot)</span>
+          <span class="font-mono text-amber-400 text-[10px]" dir="ltr">Pivot</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-amber-400">
+            {{ variables()?.pivot !== null && variables()?.pivot !== undefined ? variables()?.pivot : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">مؤشر <bdi class="font-mono text-[var(--color-blue)]">i</bdi></span>
+          <span class="font-mono text-[var(--color-blue)] text-[10px]" dir="ltr">i (&le; pivot)</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-blue)]">
+            {{ variables()?.i !== null && variables()?.i !== undefined ? variables()?.i : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">مؤشر <bdi class="font-mono text-[var(--color-beige)]">j</bdi></span>
+          <span class="font-mono text-[var(--color-beige)] text-[10px]" dir="ltr">Scan</span>
+        </div>
+        <div class="my-0.5">
+          <span class="text-xl sm:text-2xl font-extrabold font-mono text-[var(--color-beige)]">
+            {{ variables()?.j !== null && variables()?.j !== undefined ? variables()?.j : '—' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">
+        <div class="flex items-center justify-between text-[11px] text-[#828c9b]" dir="rtl">
+          <span class="font-arabic font-semibold">نطاق التقسيم</span>
+          <span class="font-mono text-[10px] text-[var(--color-blue)]" dir="ltr">Range</span>
+        </div>
+        <div class="my-0.5 flex items-center justify-center min-h-[30px]">
+          <span class="text-xs font-bold text-[#c9d2dc] font-mono line-clamp-1">
+            [{{ variables()?.left !== null && variables()?.left !== undefined ? variables()?.left : 0 }}..{{ variables()?.right !== null && variables()?.right !== undefined ? variables()?.right : 0 }}]
+          </span>
+        </div>
+      </div>
+
     <!-- ELSE INSERTION SORT (Chapter 2) -->
     } @else {
       <div class="p-2.5 rounded-xl bg-[#06070b] border border-[#23283c]">

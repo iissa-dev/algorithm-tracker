@@ -24,6 +24,11 @@ export class ExplanationBoxComponent {
       case 'select-key':
       case 'insert':
         return 'bg-[var(--color-blue)]/20 text-[var(--color-blue)] border-[var(--color-blue)]/40';
+      case 'swap':
+        return 'bg-rose-500/20 text-rose-400 border-rose-500/40';
+      case 'pivot':
+      case 'partition':
+        return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
       default:
         return 'bg-[#23283c] text-[#c9d2dc] border-[#23283c]';
     }

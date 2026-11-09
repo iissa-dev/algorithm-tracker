@@ -27,6 +27,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('AlgorithmTracker');
     expect(compiled.textContent).toContain('Insertion Sort');
     expect(compiled.textContent).toContain('Merge Sort');
+    expect(compiled.textContent).toContain('Quick Sort');
     expect(compiled.textContent).toContain('Sequential Search');
     expect(compiled.textContent).toContain('Chapter 2');
     expect(compiled.textContent).toContain('Chapter 3');

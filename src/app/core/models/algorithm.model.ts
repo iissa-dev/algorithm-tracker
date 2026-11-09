@@ -6,6 +6,9 @@ export type ActionType =
   | 'insert'
   | 'divide'
   | 'merge'
+  | 'partition'
+  | 'pivot'
+  | 'swap'
   | 'found'
   | 'not-found'
   | 'subarray-sorted'
@@ -21,6 +24,8 @@ export interface VariableSnapshot {
   left?: number | null;
   right?: number | null;
   mid?: number | null;
+  pivot?: number | null;
+  pivotIndex?: number | null;
   target?: number | null;
   conditionDescription?: string | null;
   isConditionTrue?: boolean | null;

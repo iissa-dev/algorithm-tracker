@@ -64,6 +64,23 @@
         class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06070b] border border-[var(--color-green)]/40 text-[var(--color-green)] font-arabic">
         <span class="w-1.5 h-1.5 rounded-sm bg-[var(--color-green)]"></span> تم الإيجاد
       </span>
+      } @else if (currentAlgorithm().metadata.id === 'quick-sort') {
+      <span
+        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06070b] border border-amber-400/40 text-amber-400 font-arabic">
+        <span class="w-1.5 h-1.5 rounded-sm bg-amber-400"></span> المحور (Pivot)
+      </span>
+      <span
+        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06070b] border border-rose-400/40 text-rose-400 font-arabic">
+        <span class="w-1.5 h-1.5 rounded-sm bg-rose-400"></span> تبديل
+      </span>
+      <span
+        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06070b] border border-[var(--color-green)]/40 text-[var(--color-green)] font-arabic">
+        <span class="w-1.5 h-1.5 rounded-sm bg-[var(--color-green)]"></span> مستقر
+      </span>
+      <span
+        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06070b] border border-[var(--color-beige)]/40 text-[var(--color-beige)] font-arabic">
+        <span class="w-1.5 h-1.5 rounded-sm bg-[var(--color-beige)]"></span> مقارنة
+      </span>
       } @else {
       <span
         class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06070b] border border-[var(--color-green)]/40 text-[var(--color-green)] font-arabic">
@@ -86,16 +103,21 @@
     class="mb-2.5 p-2 sm:p-2.5 rounded-xl bg-[#06070b] border border-[#23283c] flex items-center justify-between gap-2">
     <div class="flex items-center gap-2">
       <span class="text-sm">
-        {{ isSearchAlgorithm() ? '🎯' : '🗝️' }}
+        {{ isSearchAlgorithm() ? '🎯' : (currentAlgorithm().metadata.id === 'quick-sort' ? '🎯' : '🗝️') }}
       </span>
       <div class="flex items-center gap-1.5">
         <span class="text-[11px] font-bold text-[#c9d2dc] font-arabic">
-          {{ isSearchAlgorithm() ? 'هدف البحث:' : 'المفتاح:' }}
+          {{ isSearchAlgorithm() ? 'هدف البحث:' : (currentAlgorithm().metadata.id === 'quick-sort' ? 'المحور (Pivot):' : 'المفتاح:') }}
         </span>
         @if (isSearchAlgorithm()) {
         <span
           class="px-1.5 py-0.5 text-[11px] rounded bg-[var(--color-blue)]/20 text-[var(--color-blue)] font-mono border border-[var(--color-blue)]/40 font-bold">
           x = {{ currentStep()?.variables?.target ?? engine.searchTarget() }}
+        </span>
+        } @else if (currentAlgorithm().metadata.id === 'quick-sort' && currentStep()?.variables?.pivot !== null && currentStep()?.variables?.pivot !== undefined) {
+        <span
+          class="px-1.5 py-0.5 text-[11px] rounded bg-amber-500/20 text-amber-400 font-mono border border-amber-500/40 font-bold">
+          Pivot = {{ currentStep()!.variables!.pivot }} [{{ currentStep()!.variables!.left }}..{{ currentStep()!.variables!.right }}]
         </span>
         } @else if (currentStep()?.key) {
         <span
@@ -120,6 +142,12 @@
       <div
         class="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-blue)] to-[#2d4771] text-white flex items-center justify-center font-bold text-xs shadow-sm ring-1 ring-[var(--color-blue)] font-mono">
         {{ currentStep()?.variables?.target ?? engine.searchTarget() }}
+      </div>
+      } @else if (currentAlgorithm().metadata.id === 'quick-sort' && currentStep()?.variables?.pivot !== null && currentStep()?.variables?.pivot !== undefined) {
+      <div
+        class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 text-slate-950 flex items-center justify-center font-bold text-xs shadow-sm ring-1 ring-amber-400 scale-105 transition-all font-mono font-extrabold"
+        title="المحور الحالي">
+        {{ currentStep()!.variables!.pivot }}
       </div>
       } @else if (currentStep()?.key) {
       <div
@@ -148,6 +176,16 @@
           <span
             class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[var(--color-green)] text-white shadow-sm font-arabic animate-bounce">
             🎯 وجد
+          </span>
+          } @else if (isPivot($index)) {
+          <span
+            class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-amber-500 text-slate-950 shadow-sm font-arabic animate-pulse">
+            🎯 المحور
+          </span>
+          } @else if (isSwapping($index)) {
+          <span
+            class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-rose-500 text-white shadow-sm font-arabic animate-bounce">
+            ⇄ تبديل
           </span>
           } @else if (isComparing($index)) {
           <span
@@ -181,21 +219,29 @@
 
         <!-- Element Box (Compact) -->
         <div [class]="boxWidthClass()" [ngClass]="getAnimationClass($index)" [style.height.px]="getHeightPx(val)"
+          [class.border-amber-400]="isPivot($index)"
+          [class.bg-amber-400/20]="isPivot($index)"
+          [class.text-amber-400]="isPivot($index)"
+          [class.ring-2]="isPivot($index)"
+          [class.ring-amber-400/50]="isPivot($index)"
+          [class.border-rose-400]="isSwapping($index)"
+          [class.bg-rose-400/20]="isSwapping($index)"
+          [class.text-rose-400]="isSwapping($index)"
           [class.border-[var(--color-green)]]="isFound($index) || isAllSorted() || isSorted($index)"
           [class.bg-[var(--color-green)]/20]="isFound($index) || isAllSorted() || isSorted($index)"
           [class.text-[var(--color-green)]]="isFound($index) || isAllSorted() || isSorted($index)"
           [class.ring-1]="isFound($index)" [class.ring-[var(--color-green)]]="isFound($index)"
-          [class.border-[var(--color-beige)]]="isComparing($index)"
-          [class.bg-[var(--color-beige)]/20]="isComparing($index)"
-          [class.text-[var(--color-beige)]]="isComparing($index)"
+          [class.border-[var(--color-beige)]]="isComparing($index) && !isPivot($index)"
+          [class.bg-[var(--color-beige)]/20]="isComparing($index) && !isPivot($index)"
+          [class.text-[var(--color-beige)]]="isComparing($index) && !isPivot($index)"
           [class.border-[var(--color-blue)]]="isShifting($index)" [class.bg-[var(--color-blue)]/20]="isShifting($index)"
           [class.text-white]="isShifting($index)"
           [class.border-[var(--color-blue)]]="isKeySource($index) || isInserting($index)"
           [class.border-dashed]="isKeySource($index)" [class.bg-[var(--color-blue)]/10]="isKeySource($index)"
           [class.opacity-60]="isKeySource($index)"
-          [class.border-[#23283c]]="!isActive($index) && !isSorted($index) && !isAllSorted() && !isKeySource($index) && !isFound($index)"
-          [class.bg-[#141724]]="!isActive($index) && !isSorted($index) && !isAllSorted() && !isKeySource($index) && !isFound($index)"
-          [class.text-[#c9d2dc]]="!isActive($index) && !isSorted($index) && !isAllSorted() && !isKeySource($index) && !isFound($index)"
+          [class.border-[#23283c]]="!isActive($index) && !isSorted($index) && !isAllSorted() && !isKeySource($index) && !isFound($index) && !isPivot($index) && !isSwapping($index)"
+          [class.bg-[#141724]]="!isActive($index) && !isSorted($index) && !isAllSorted() && !isKeySource($index) && !isFound($index) && !isPivot($index) && !isSwapping($index)"
+          [class.text-[#c9d2dc]]="!isActive($index) && !isSorted($index) && !isAllSorted() && !isKeySource($index) && !isFound($index) && !isPivot($index) && !isSwapping($index)"
           class="rounded-xl border-2 flex flex-col items-center justify-between p-1 sm:p-1.5 font-mono font-bold transition-all duration-300 shadow-sm relative">
           <span class="text-[9px] text-[#828c9b] font-normal">#{{ $index }}</span>
           <span class="text-xs sm:text-sm font-extrabold tracking-tight">{{ val }}</span>
@@ -209,9 +255,13 @@
   </div>
   }
 
-  <!-- TAB CONTENT 2: Merge Sort Recursion Tree -->
+  <!-- TAB CONTENT 2: Divide & Conquer Recursion Tree (Merge Sort / Quick Sort) -->
   @if (currentTab() === 'tree') {
-  <app-merge-sort-tree></app-merge-sort-tree>
+    @if (currentAlgorithm().metadata.id === 'quick-sort') {
+      <app-quick-sort-tree></app-quick-sort-tree>
+    } @else {
+      <app-merge-sort-tree></app-merge-sort-tree>
+    }
   }
 
   <!-- TAB CONTENT 3: Video Lecture Embed -->
